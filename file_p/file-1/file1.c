@@ -52,14 +52,62 @@ void read_students(char filename[]) {
 }
 
 
+void search(char filename[],int sid){
+    int count=0;
+    FILE *fp;
+    fp=fopen(filename,"r");
+    stu s;
+    if(fp==NULL){
+        printf("File not found");
+        return ;
+    }
+    while (fread(&s,sizeof(s),1,fp))
+    {
+    if(s.id==sid){
+        printf("\n Name : %s \t\t id: %d \t USN: %s",s.name,s.id,s.usn);
+        count=1;
+    }
+    if(count==0){
+        printf("ID not found");
+    }
+    }
+
+}
+
 int main(){
-     char f[10];
+    char f[20];
+     int sid;
+     int choise;
+     printf("Give the student details");
      scanf("%s",f);
-     read(f);
-
-     read_students(f);
-
-     return 0;
+     printf("Enter the choise");
+     while (1)
+     {
+       
+     
+     printf("\n1.Give input \n 2.Search \n 3.display \n 4.Exit");
+     scanf("%d",&choise);
+     switch (choise)
+     {
+     case 1:
+         read(f);
+        break;
+     case 2:
+         printf("Enter the id u have to search");
+     scanf("%d",&sid);
+     search(f,sid);
+        break;
+    case 3:
+         read_students(f);
+         break;
+     case 4:
+        break;
+     default:
+     printf("invalid input");
+        break;
+     }
+     }
+    return 0;
 
 
 }
