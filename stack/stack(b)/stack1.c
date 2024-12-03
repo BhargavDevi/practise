@@ -64,7 +64,7 @@ int main()
 
     while (1)
     {
-        printf("\nEnter the choise u want to select \n 1.push \n 2.pop.\n 3.display \n 4.exit  :");
+        printf("\nEnter the choise u want to select \n 1.push \n 2.pop.\n 3.display \n 4.top stack  \n5.exit:");
         scanf("%d", &choise);
         switch (choise)
         {
