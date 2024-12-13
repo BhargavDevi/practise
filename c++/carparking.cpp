@@ -14,6 +14,8 @@ public:
     Car(int carId = 0, string carModel = "Unknown", double rate = 0.0)
         : id(carId), model(carModel), dailyRate(rate), isAvailable(true) {}
 
+    virtual ~Car() {}  // Virtual destructor
+
     void rentCar() {
         if (isAvailable) {
             isAvailable = false;
@@ -26,14 +28,15 @@ public:
     void returnCar(int days) {
         if (!isAvailable) {
             isAvailable = true;
-            cout << model << " (ID: " << id << ") returned. Total cost: Rs." << days * dailyRate << "\n";
+            cout << model << " (ID: " << id << ") returned. Total cost: Rs. "
+                 << days * dailyRate << "\n";
         } else {
             cout << model << " (ID: " << id << ") is already available.\n";
         }
     }
 
     void display() const {
-        cout << "ID: " << id << ", Model: " << model << ", Rate: Rs." << dailyRate
+        cout << "ID: " << id << ", Model: " << model << ", Rate: Rs. " << dailyRate
              << ", Available: " << (isAvailable ? "Yes" : "No") << "\n";
     }
 
@@ -41,110 +44,137 @@ public:
     bool isCarAvailable() const { return isAvailable; }
 };
 
-// New class: LuxuryFeature
-class LuxuryFeature {
-protected:
-    string feature;
+
+// Derived class: MaintainedCar
+class MaintainedCar : public Car {
+    string lastServiceDate;
+    int mileage;
 
 public:
-    LuxuryFeature(string luxuryFeature = "Standard") : feature(luxuryFeature) {}
-
-    void showFeature() const {
-        cout << "Luxury Feature: " << feature << "\n";
-    }
-};
-
-// Derived class: LuxuryCar (hybrid inheritance from Car and LuxuryFeature)
-class LuxuryCar : public Car, public LuxuryFeature {
-public:
-    LuxuryCar(int carId, string carModel, double rate, string luxuryFeature)
-        : Car(carId, carModel, rate), LuxuryFeature(luxuryFeature) {}
+    MaintainedCar(int carId, string carModel, double rate, string serviceDate, int carMileage)
+        : Car(carId, carModel, rate), lastServiceDate(serviceDate), mileage(carMileage) {}
 
     void display() const {
-        Car::display();       // Display basic car details
-        showFeature();        // Display luxury feature
-    }
-};
-
-// CarRentalSystem class to manage cars
-class CarRentalSystem {
-private:
-    static const int MAX_CARS = 10;
-    Car* cars[MAX_CARS];
-    int carCount;
-
-public:
-    CarRentalSystem() : carCount(0) {}
-
-    void addCar(Car* car) {
-        if (carCount < MAX_CARS) {
-            cars[carCount++] = car;
-        } else {
-            cout << "No space to add more cars.\n";
-        }
-    }
-
-    void displayAvailableCars() const {
-        for (int i = 0; i < carCount; ++i) {
-            if (cars[i]->isCarAvailable()) {
-                cars[i]->display();
-            }
-        }
-    }
-
-    void rentCarById(int id) {
-        for (int i = 0; i < carCount; ++i) {
-            if (cars[i]->getId() == id) {
-                cars[i]->rentCar();
-                return;
-            }
-        }
-        cout << "Car with ID " << id << " not found.\n";
-    }
-
-    void returnCarById(int id, int days) {
-        for (int i = 0; i < carCount; ++i) {
-            if (cars[i]->getId() == id) {
-                cars[i]->returnCar(days);
-                return;
-            }
-        }
-        cout << "Car with ID " << id << " not found.\n";
+        Car::display();
+        cout << "Last Service Date: " << lastServiceDate << ", Mileage: " << mileage << " km\n";
     }
 };
 
 // Main function
 int main() {
-    CarRentalSystem system;
+    const int MAX_CARS = 5;
+    Car* cars[MAX_CARS];
+    int carCount = 0;
 
-    // Adding both regular and luxury cars
-    system.addCar(new Car(1, "Toyota Corolla", 1400));
-    system.addCar(new Car(2, "Honda Civic", 1500));
-    system.addCar(new LuxuryCar(3, "BMW 7 Series", 15000, "Massage Seats"));
-    system.addCar(new LuxuryCar(4, "Mercedes S-Class", 20000, "Heated Seats"));
+    // Adding cars
+    cars[carCount++] = new Car(1, "Toyota Corolla", 1400);
+    cars[carCount++] = new Car(2, "Honda Civic", 1500);
+    cars[carCount++] = new MaintainedCar(3, "Ford Mustang", 2000, "2024-01-15", 12000);
+    cars[carCount++] = new MaintainedCar(4, "Chevrolet Camaro", 2500, "2024-02-10", 15000);
 
     int choice;
     do {
-        cout << "\n1. View Available Cars\n2. Rent a Car\n3. Return a Car\n4. Exit\nChoose: ";
+        cout << "\n1. View Cars\n2. Rent a Car\n3. Return a Car\n4. Search by ID\n5. Check Availability\n6. View Maintenance Info\n7. Exit\nChoose: ";
         cin >> choice;
 
-        if (choice == 1) {
-            system.displayAvailableCars();
-        } else if (choice == 2) {
-            int id;
-            cout << "Enter Car ID to rent: ";
-            cin >> id;
-            system.rentCarById(id);
-        } else if (choice == 3) {
-            int id, days;
-            cout << "Enter Car ID to return: ";
-            cin >> id;
-            cout << "Enter number of rental days: ";
-            cin >> days;
-            system.returnCarById(id, days);
-        }
+        switch (choice) {
+            case 1:
+                for (int i = 0; i < carCount; ++i) {
+                    cars[i]->display();
+                }
+                break;
 
-    } while (choice != 4);
+            case 2: {
+                int id;
+                cout << "Enter Car ID to rent: ";
+                cin >> id;
+                bool found = false;
+                for (int i = 0; i < carCount; ++i) {
+                    if (cars[i]->getId() == id) {
+                        cars[i]->rentCar();
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) cout << "Car with ID " << id << " not found.\n";
+                break;
+            }
+
+            case 3: {
+                int id, days;
+                cout << "Enter Car ID to return: ";
+                cin >> id;
+                cout << "Enter number of rental days: ";
+                cin >> days;
+                bool found = false;
+                for (int i = 0; i < carCount; ++i) {
+                    if (cars[i]->getId() == id) {
+                        cars[i]->returnCar(days);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) cout << "Car with ID " << id << " not found.\n";
+                break;
+            }
+
+            case 4: {
+                int id;
+                cout << "Enter Car ID to search: ";
+                cin >> id;
+                bool found = false;
+                for (int i = 0; i < carCount; ++i) {
+                    if (cars[i]->getId() == id) {
+                        cars[i]->display();
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) cout << "Car with ID " << id << " not found.\n";
+                break;
+            }
+
+            case 5: {
+                int id;
+                cout << "Enter Car ID to check availability: ";
+                cin >> id;
+                bool found = false;
+                for (int i = 0; i < carCount; ++i) {
+                    if (cars[i]->getId() == id) {
+                        cout << "Car ID " << id << " is "
+                             << (cars[i]->isCarAvailable() ? "Available.\n" : "Not Available.\n");
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) cout << "Car with ID " << id << " not found.\n";
+                break;
+            }
+
+            case 6: {
+                cout << "Maintenance Info for All Cars:\n";
+                for (int i = 0; i < carCount; ++i) {
+                    MaintainedCar* maintainedCar = dynamic_cast<MaintainedCar*>(cars[i]);
+                    if (maintainedCar) {
+                        maintainedCar->display();
+                    }
+                }
+                break;
+            }
+
+            case 7:
+                cout << "Exiting program. Thank you!\n";
+                break;
+
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 7);
+
+    // Clean up dynamically allocated memory
+    for (int i = 0; i < carCount; ++i) {
+        delete cars[i];
+    }
 
     return 0;
 }
