@@ -1,3 +1,13 @@
 console.log("DOM");
 
-document.body.childNodes[1].childNodes[1].style.backgroundColor="green"
+document.addEventListener("DOMContentLoaded", () => {
+    let box = document.getElementsByClassName("box");
+    
+    
+        box[2].style.backgroundColor = "red";
+        
+   
+});
+// console.log(
+//  document.getSelection(".box"));
+
