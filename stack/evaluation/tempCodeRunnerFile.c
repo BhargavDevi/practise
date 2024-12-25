@@ -1,1 +1,1 @@
-                // exit(0);
+    printf("%d\n",q.data[q.front]);
