@@ -1,7 +1,3 @@
-
-
-
-
 function color() {
 
     let v1 = 0 + Math.random() * 255;
