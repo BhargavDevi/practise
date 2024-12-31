@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 using namespace std;
 
-// Base class: Car
 class Car {
 protected:
     int id;
@@ -15,7 +15,6 @@ public:
         : id(carId), model(carModel), dailyRate(rate), isAvailable(true) {}
 
     virtual ~Car() {}  
-
     void rentCar() {
         if (isAvailable) {
             isAvailable = false;
@@ -44,7 +43,6 @@ public:
     bool isCarAvailable() const { return isAvailable; }
 };
 
-
 class MaintainedCar : public Car {
     string lastServiceDate;
     int mileage;
@@ -57,22 +55,79 @@ public:
         Car::display();
         cout << "Last Service Date: " << lastServiceDate << ", Mileage: " << mileage << " km\n";
     }
+
+    string getLastServiceDate() const { return lastServiceDate; }
+    int getMileage() const { return mileage; }
 };
+
+void saveData(Car* cars[], int carCount) {
+    ofstream outFile("cars_data.txt");
+    if (outFile.is_open()) {
+        outFile << carCount << "\n";
+        for (int i = 0; i < carCount; ++i) {
+            MaintainedCar* maintainedCar = dynamic_cast<MaintainedCar*>(cars[i]);
+            if (maintainedCar) {
+                outFile << "MaintainedCar " << cars[i]->getId() << " " << cars[i]->isCarAvailable() << " "
+                        << maintainedCar->getLastServiceDate() << " "
+                        << maintainedCar->getMileage() << "\n";
+            } else {
+                outFile << "Car " << cars[i]->getId() << " " << cars[i]->isCarAvailable() << " ";
+            }
+        }
+        outFile.close();
+    } else {
+        cout << "Error saving data to file.\n";
+    }
+}
+
+void loadData(Car* cars[], int& carCount) {
+    ifstream inFile("cars_data.txt");
+    if (inFile.is_open()) {
+        inFile >> carCount;
+        string type;
+        for (int i = 0; i < carCount; ++i) {
+            inFile >> type;
+            if (type == "MaintainedCar") {
+                int id, isAvailable, mileage;
+                double rate;
+                string model, lastServiceDate;
+                inFile >> id >> isAvailable >> rate;
+                inFile.ignore();
+                getline(inFile, model, '\n');
+                inFile >> lastServiceDate >> mileage;
+                cars[i] = new MaintainedCar(id, model, rate, lastServiceDate, mileage);
+                if (!isAvailable) {
+                    cars[i]->rentCar();  
+                }
+            } else if (type == "Car") {
+                int id, isAvailable;
+                double rate;
+                string model;
+                inFile >> id >> isAvailable >> rate;
+                inFile.ignore();
+                getline(inFile, model, '\n');
+                cars[i] = new Car(id, model, rate);
+                if (!isAvailable) {
+                    cars[i]->rentCar(); 
+                }
+            }
+        }
+        inFile.close();
+    } else {
+        cout << "No saved data found. Starting with default cars.\n";
+    }
+}
 
 int main() {
     const int MAX_CARS = 5;
     Car* cars[MAX_CARS];
     int carCount = 0;
 
-    cars[carCount++] = new Car(1, "Toyota Corolla", 1400);
-    cars[carCount++] = new Car(2, "Honda Civic", 1500);
-    cars[carCount++] = new MaintainedCar(3, "Ford Mustang", 2000, "2024-01-15", 12000);
-    cars[carCount++] = new MaintainedCar(4, "Chevrolet Camaro", 2500, "2024-02-10", 15000);
-    
+    loadData(cars, carCount);
 
     int choice;
-    do {
-        cout << "\n1. View Cars\n2. Rent a Car\n3. Return a Car\n4. Search by ID\n5. Check Availability\n6. View Maintenance Info\n7. Exit\nChoose: ";
+    while (true) {
+        cout << "\n1. View Cars\n2. Rent a Car\n3. Return a Car\n4. Search by ID\n5. Check Availability\n6. View Maintenance Info\n7. Add a Car\n8. Exit\nChoose: ";
         cin >> choice;
 
         switch (choice) {
@@ -91,6 +146,7 @@ int main() {
                     if (cars[i]->getId() == id) {
                         cars[i]->rentCar();
                         found = true;
+                        saveData(cars, carCount);  
                         break;
                     }
                 }
@@ -109,6 +165,7 @@ int main() {
                     if (cars[i]->getId() == id) {
                         cars[i]->returnCar(days);
                         found = true;
+                        saveData(cars, carCount); 
                         break;
                     }
                 }
@@ -160,19 +217,32 @@ int main() {
                 break;
             }
 
-            case 7:
-                cout << "Exiting program. Thank you!\n";
+            case 7: {
+                int id;
+                string model;
+                double rate;
+                cout << "Enter Car ID: ";
+                cin >> id;
+                cout << "Enter Car Model: ";
+                cin.ignore();
+                getline(cin, model);
+                cout << "Enter Daily Rate: ";
+                cin >> rate;
+
+                cars[carCount++] = new Car(id, model, rate);
+                cout << "Car added successfully.\n";
+                saveData(cars, carCount); 
                 break;
+            }
+
+            case 8:
+                cout << "Exiting program. Thank you!\n";
+                saveData(cars, carCount); 
+                return 0;
 
             default:
                 cout << "Invalid choice. Please try again.\n";
         }
-    } while (choice != 7);
-
-    // Clean up dynamically allocated memory
-    for (int i = 0; i < carCount; ++i) {
-        delete cars[i];
     }
 
-    return 0;
 }
