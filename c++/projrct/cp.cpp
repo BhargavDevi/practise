@@ -67,7 +67,7 @@ public:
         mileage = carMileage;
     }
 
-    void display() const override {
+    void display() const  {
         Car::display();
         cout << "Last Service Date: " << lastServiceDate << ", Mileage: " << mileage << " km\n";
     }
@@ -289,7 +289,7 @@ int main() {
     }
 
     case 9:
-        cout << "Exiting program. Thank you!\n";
+        cout << "Thank you!\n";
         saveData(cars, carCount);
         for (int i = 0; i < carCount; ++i) {
             delete cars[i];
