@@ -45,10 +45,16 @@ public:
         }
     }
 
-    virtual void display() const {
-        std::cout << "ID: " << id << ", Model: " << model << ", Rate: Rs. " << dailyRate
-                  << ", Available: " << (isAvailable ? "Yes" : "No") << "\n";
-    }
+   virtual void display() const {
+    cout << "----------------------------------------\n";
+    cout << "Car Type: Regular Car\n";
+    cout << "Car ID: " << id << "\n";
+    cout << "Car Model: " << model << "\n";
+    cout << "Daily Rate: Rs. " << dailyRate << "\n";
+    cout << "Availability: " << (isAvailable ? "Available" : "Not Available") << "\n";
+    cout << "----------------------------------------\n";
+}
+
 
     int getId() const { return id; }
     bool isCarAvailable() const { return isAvailable; }
@@ -67,10 +73,17 @@ public:
         mileage = carMileage;
     }
 
-    void display() const  {
-        Car::display();
-        cout << "Last Service Date: " << lastServiceDate << ", Mileage: " << mileage << " km\n";
-    }
+    void display() const override {
+    cout << "----------------------------------------\n";
+    cout << "Car Type: MaintainedCar\n";
+    cout << "Car ID: " << id << "\n";
+    cout << "Car Model: " << model << "\n";
+    cout << "Daily Rate: Rs. " << dailyRate << "\n";
+    cout << "Availability: " << (isAvailable ? "Available" : "Not Available") << "\n";
+    cout << "Last Service Date: " << lastServiceDate << "\n";
+    cout << "Mileage: " << mileage << " km\n";
+    cout << "----------------------------------------\n";
+}
 
     string getLastServiceDate() const { return lastServiceDate; }
     int getMileage() const { return mileage; }
@@ -79,23 +92,26 @@ public:
 void saveData(Car* cars[], int carCount) {
     ofstream outFile("cars_data.txt", ios::out);
     if (outFile.is_open()) {
-        outFile << carCount << "\n";
+        outFile << "Total Cars in System: " << carCount << "\n";
+        outFile << "----------------------------------------\n";
         for (int i = 0; i < carCount; ++i) {
             MaintainedCar* maintainedCar = dynamic_cast<MaintainedCar*>(cars[i]);
             if (maintainedCar) {
-                outFile << "MaintainedCar "
-                        << maintainedCar->getId() << " "
-                        << maintainedCar->getModel() << " "
-                        << maintainedCar->getRate() << " "
-                        << maintainedCar->isCarAvailable() << " "
-                        << maintainedCar->getLastServiceDate() << " "
-                        << maintainedCar->getMileage() << "\n";
+                outFile << "Car Type: MaintainedCar\n"
+                       << "Car ID: " << maintainedCar->getId() << "\n"
+                       << "Car Model: " << maintainedCar->getModel() << "\n"
+                       << "Daily Rate: Rs. " << maintainedCar->getRate() << "\n"
+                       << "Availability: " << (maintainedCar->isCarAvailable() ? "Available" : "Not Available") << "\n"
+                       << "Last Service Date: " << maintainedCar->getLastServiceDate() << "\n"
+                       << "Mileage: " << maintainedCar->getMileage() << " km\n"
+                       << "----------------------------------------\n";
             } else {
-                outFile << "Car "
-                        << cars[i]->getId() << " "
-                        << cars[i]->getModel() << " "
-                        << cars[i]->getRate() << " "
-                        << cars[i]->isCarAvailable() << "\n";
+                outFile << "Car Type: Regular Car\n"
+                       << "Car ID: " << cars[i]->getId() << "\n"
+                       << "Car Model: " << cars[i]->getModel() << "\n"
+                       << "Daily Rate: Rs. " << cars[i]->getRate() << "\n"
+                       << "Availability: " << (cars[i]->isCarAvailable() ? "Available" : "Not Available") << "\n"
+                       << "----------------------------------------\n";
             }
         }
         outFile.close();
@@ -289,7 +305,7 @@ int main() {
     }
 
     case 9:
-        cout << "Thank you!\n";
+        cout << "Exiting program. Thank you!\n";
         saveData(cars, carCount);
         for (int i = 0; i < carCount; ++i) {
             delete cars[i];
