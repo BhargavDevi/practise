@@ -1,0 +1,157 @@
+The program above is a car rental management system written in C++. Here are the key concepts and features used in the program:
+
+
+---
+
+1. Object-Oriented Programming (OOP):
+
+a. Classes and Objects:
+
+Car Class: Represents a basic car in the system with attributes like id, model, dailyRate, isAvailable, and methods like rentCar(), returnCar(), and display().
+
+MaintainedCar Class: Inherits from Car, adds maintenance-specific attributes (lastServiceDate and mileage), and overrides the display() method.
+
+
+b. Inheritance:
+
+MaintainedCar is a derived class of Car. It reuses and extends the functionality of the base class.
+
+
+c. Polymorphism:
+
+Method Overriding: The display() method is overridden in the MaintainedCar class.
+
+Dynamic Casting: The dynamic_cast operator checks whether an object is of a specific derived type.
+
+
+d. Encapsulation:
+
+Member variables are protected/private, accessed through public getter and setter methods.
+
+
+
+---
+
+2. File I/O:
+
+Save Data: The saveData() function writes car data (regular and maintained cars) to a file (cars_data.txt).
+
+Load Data: The loadData() function reads data from the file and reconstructs the car objects.
+
+
+
+---
+
+3. Runtime Polymorphism:
+
+Use of base class pointers (Car *) to store objects of both Car and MaintainedCar.
+
+
+
+---
+
+4. User Interaction:
+
+A menu-driven interface lets users:
+
+1. Add cars (regular or maintained).
+
+
+2. View all cars.
+
+
+3. Rent a car.
+
+
+4. Return a car.
+
+
+5. Search for a car by ID.
+
+
+6. Check availability.
+
+
+7. View maintenance info.
+
+
+8. Update maintenance info.
+
+
+
+
+
+---
+
+5. Dynamic Memory Management:
+
+Cars are stored in a dynamic array (Car *cars[]), and memory is allocated using new and freed using delete.
+
+
+
+---
+
+6. Time Management:
+
+Uses time_t and std::time to track rental and return times and calculate costs based on rental duration.
+
+
+
+---
+
+7. Data Structures:
+
+Array of Pointers: The system uses an array of Car pointers (Car *cars[]) to manage multiple car objects.
+
+
+
+---
+
+8. Standard Library Usage:
+
+<string>: For handling strings like car models, service dates, etc.
+
+<fstream>: For file operations (saving/loading data).
+
+<ctime>: For time-related operations.
+
+<sstream>: To parse strings while loading data from the file.
+
+
+
+---
+
+9. Input Validation and Error Handling:
+
+The program checks for invalid IDs when renting or returning cars.
+
+Validates whether a car is maintained or regular during addition.
+
+
+
+---
+
+10. Abstraction:
+
+General car functionality is encapsulated in the Car class, while specific features (like maintenance) are abstracted into the MaintainedCar class.
+
+
+
+---
+
+Key Features in Functionality:
+
+1. Rental Process: Tracks car availability and rental duration.
+
+
+2. Cost Calculation: Calculates rental cost based on hours and a derived hourly rate.
+
+
+3. Maintenance Management: Allows updating and viewing maintenance details for maintained cars.
+
+
+4. Persistence: Saves and loads car data to/from a file for continuity.
+
+
+
+This program demonstrates how to design a real-world system using OOP principles and efficient data management techniques.
