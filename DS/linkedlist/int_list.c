@@ -35,6 +35,7 @@ Node *delete_first(Node *first)
     if (first == NULL)
     {
         printf("overflow");
+        return first;
     }
     else
     {
@@ -99,9 +100,9 @@ int main()
         case 3:
             display(first);
             break;
-            case 4:
-            first=delete_end(first);
-            break;
+        // case 4:
+        //     first=delete_end(first);
+        //     break;
         case 5:
             exit(0);
 
