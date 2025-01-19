@@ -21,7 +21,8 @@ public:
     string getModel() const { return model; }
     double getRate() const { return dailyRate; }
 
-    virtual void rentCar() {
+    virtual void rentCar() {  
+        // use of virtule function
         if (isAvailable) {
             isAvailable = false;
             rentalTime = std::time(nullptr);
