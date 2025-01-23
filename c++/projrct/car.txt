@@ -155,3 +155,31 @@ Key Features in Functionality:
 
 
 This program demonstrates how to design a real-world system using OOP principles and efficient data management techniques.
+
+
+
+
+
+
+
+{
+            MaintainedCar *maintainedCar = dynamic_cast<MaintainedCar *>(cars[i]);
+            if (maintainedCar)
+            {
+                outFile << "MaintainedCar "
+                        << maintainedCar->getId() << " "
+                        << maintainedCar->getModel() << " "
+                        << maintainedCar->getRate() << " "
+                        << maintainedCar->isCarAvailable() << " "
+                        << maintainedCar->getLastServiceDate() << " "
+                        << maintainedCar->getMileage() << "\n";
+            }
+            else
+            {
+                outFile << "Car "
+                        << cars[i]->getId() << " "
+                        << cars[i]->getModel() << " "
+                        << cars[i]->getRate() << " "
+                        << cars[i]->isCarAvailable() << "\n";
+            }
+        }

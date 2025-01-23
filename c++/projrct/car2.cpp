@@ -111,6 +111,8 @@ void saveData(Car *cars[], int carCount)
         for (int i = 0; i < carCount; ++i)
         {
             MaintainedCar *maintainedCar = dynamic_cast<MaintainedCar *>(cars[i]);
+            {
+            MaintainedCar *maintainedCar = dynamic_cast<MaintainedCar *>(cars[i]);
             if (maintainedCar)
             {
                 outFile << "MaintainedCar "
@@ -129,6 +131,7 @@ void saveData(Car *cars[], int carCount)
                         << cars[i]->getRate() << " "
                         << cars[i]->isCarAvailable() << "\n";
             }
+        }
         }
         outFile.close();
     }

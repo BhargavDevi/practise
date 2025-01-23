@@ -74,7 +74,7 @@ public:
         mileage = carMileage;
     }
 
-    void display() const override {
+    void display() const {
     cout << "----------------------------------------\n";
     cout << "Car Type: MaintainedCar\n";
     cout << "Car ID: " << id << "\n";
@@ -189,23 +189,21 @@ int main() {
         cout << "Enter Car ID: ";
         cin >> id;
         cout << "Enter Car Model: ";
-        cin.ignore();  // To ignore any leftover newline character from previous input
+        cin.ignore();  
         getline(cin, model);
         cout << "Enter Daily Rate: ";
         cin >> rate;
 
-        // Now input the maintenance details for a MaintainedCar
         cout << "Enter Last Service Date (YYYY-MM-DD): ";
-        cin.ignore();  // Ignore any leftover newline character
+        cin.ignore();  
         getline(cin, serviceDate);
         cout << "Enter Mileage: ";
         cin >> mileage;
 
-        // Create a new MaintainedCar and add it to the array
         cars[carCount++] = new MaintainedCar(id, model, rate, serviceDate, mileage);
         
         cout << "Maintained car added successfully.\n";
-        saveData(cars, carCount);  // Save the updated data to the file
+        saveData(cars, carCount);  
         break;
     }
 
