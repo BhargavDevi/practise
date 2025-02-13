@@ -135,7 +135,7 @@ int main()
     int data, choise,key;
     while (1)
     {
-        printf("1.insert the data \n2.inorder display\n3.preorder\n4.postorder\n5.delete data\n6.exit");
+        printf("1.insert the data \n2.inorder display\n3.preorder\n4.postorder\n5.delete data\n6.exit\n");
         printf("Enter your choise\n");
         scanf("%d", &choise);
         switch (choise)
