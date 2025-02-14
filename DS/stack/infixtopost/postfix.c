@@ -66,7 +66,7 @@ int presidence(char sym)
             
         }
         else{
-            while (presidence(sym)<presidence(stacktop()))
+            while (presidence(sym)<= presidence(stacktop()))
             {
                 x=pop();
                 postfix[j++]=x;
