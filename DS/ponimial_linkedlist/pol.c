@@ -67,7 +67,52 @@ Node *addEq(Node *p1, Node *p2)
             add = createEquation(add, (an + temp->a), temp->px, temp->py);
         }
         else
-        {
+        {        #include <stdlib.h>
+        #include <stdio.h>
+        
+        typedef struct Node {
+            int a, px, py, f;
+            struct Node *next;
+        } Node;
+        
+        Node* createEquation(Node* head, int a, int px, int py);
+        int search(Node* head, int px, int py);
+        
+        Node* addPolynomials(Node* p1, Node* p2) {
+            Node *temp, *add = NULL;
+            int hash[100][100] = {0}; // Assuming px and py are in the range [0, 99]
+        
+            temp = p1;
+            while (temp != NULL) {
+                hash[temp->px][temp->py] += temp->a;
+                temp = temp->next;
+            }
+        
+            temp = p2;
+            while (temp != NULL) {
+                hash[temp->px][temp->py] += temp->a;
+                temp = temp->next;
+            }
+        
+            for (int i = 0; i < 100; i++) {
+                for (int j = 0; j < 100; j++) {
+                    if (hash[i][j] != 0) {
+                        add = createEquation(add, hash[i][j], i, j);
+                    }
+                }
+            }
+        
+            return add;
+        }
+        
+        void display(Node *p) {
+            Node *temp = p;
+            while (temp != NULL) {
+                printf("%dx^%dy^%d ", temp->a, temp->px, temp->py);
+                temp = temp->next;
+            }
+            printf("\n");
+        }
             add = createEquation(add, temp->a, temp->px, temp->py);
         }
         temp = temp->next;

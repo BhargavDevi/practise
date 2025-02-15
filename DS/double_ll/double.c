@@ -156,6 +156,8 @@ int main(){
         scanf("%d%d",&n,&m);
         h=swap(h,n,m);
         break;
+        case 6:
+        exit (0);
         default:
         printf("invalid");
             break;

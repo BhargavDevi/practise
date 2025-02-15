@@ -1,124 +1,96 @@
+
 #include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
-struct node
-{
-    int data;
-    struct node *next;
-};
-typedef struct node Node;
-Node *insert(Node *first, int data1)
-{
-    Node *newnode, *temp;
-    newnode = (Node *)malloc(sizeof(Node));
-    newnode->data = data1;
-    newnode->next = NULL;
-    if (first == NULL)
-    {
-        first = newnode;
-    }
-    else
-    {
-        temp = first;
-        while (temp->next != NULL)
-        {
-            temp = temp->next;
-        }
-        temp->next = newnode;
-    }
-    printf("%d is been inserted ", data1);
-    return (first);
+#include <string.h>
+char stack[100], prefix[50];
+int sp;
+
+void push(char sym) {
+stack[++sp] = sym;
 }
 
-Node *delete_first(Node *first)
-{
-    Node *temp;
-    if (first == NULL)
-    {
-        printf("overflow");
-    }
-    else
-    {
+char pop() {
+if (sp == -1) {
+printf("Error: Stack underflow\n");
+exit(1);
+}
+return stack[sp--];
+}
 
-        temp = first;
-        first = first->next;
-        printf("%d is been deleted ", temp->data);
-        free(temp);
-    }
-    return (first);
-}void display(Node *first)
-{
-    Node *temp=first;
-    if (temp == NULL)
-    {
-        printf("Empty\n");
-        return;
-    }
-    while (temp->next != NULL)
-    {
-        printf("%d\n", temp->data);
-        temp = temp->next;
-    }
-    printf("%d\n",temp->data);
+char stackTop() {
+if (sp == -1) return '#';
+return stack[sp];
 }
-Node * insertpos(Node * list ,int ele,int pos){
-    Node * temp,* newnode;
-    int count =1;
-    if(newnode==NULL){
-        printf("issue in the memory allocation");
-        return list;
-    }
-    newnode=(Node *)malloc(sizeof(Node));
-    newnode->data=ele;
-    newnode->next=NULL;
-    if(pos==1){
-        newnode->next=list;
-        return newnode;
-    }
-    temp=list;
-    while (temp!=NULL&&count<(pos-1))
-    {    
-         temp=temp->next;
-         count++;
-    }
-    if(temp!=NULL){
-        newnode->next=temp->next;
-        temp->next=newnode;
-        return list;
-    }
-    return list;
+
+int precOperator(char sym) {
+switch (sym) {
+case '#':
+case ')': return 1;
+case '+':
+case '-': return 2;
+case '*':
+case '%':
+case '/': return 3;
+case '^': return 4;
+default: return 0;
 }
-int main()
+}
+
+void strrev(char *str) {
+int len = strlen(str);
+for (int i = 0; i < len / 2; i++) {
+char temp = str[i];
+str[i] = str[len - i - 1];
+str[len - i - 1] = temp;
+}
+}
+void infixToPrefix(char infix[])
 {
-    Node *first = NULL;
-    int choise, data,ele,pos;
-    while (1)
-    {
-        printf("1.Insert\n2.delete_first\n3.display\n4.delete_end\n5.insertposition\n6.exit\n");
-        scanf("%d", &choise);
-        switch (choise)
-        {
-        case 1:
-            printf("Enter the data to be inserted\n");
-            scanf("%d", &data);
-            first=insert(first, data);
-            break;
-        case 2:
-            first=delete_first(first);
-            break;
-        case 3:
-            display(first);
-            break;
-        
-        case 5:
-           printf("enter the element to insert and its position");
-           scanf("%d %d",&ele,&pos);
-           first=insertpos(first,ele,pos);
-           break;
-        case 6:
-           exit (0);
-        default:
-            printf("invalid");
-        }
-        printf("Choise :");
-    }
+int i = 0, j = 0;
+char sym, x;
+strrev(infix);
+while ((sym = infix[i++]) != '\0')
+{
+if (isalnum(sym))
+{
+prefix[j++] = sym;
+}
+else if (sym == ')')
+{
+push(sym);
+}
+else if (sym == '(')
+{
+while ((x = pop()) != ')')
+{
+prefix[j++] = x;
+}
+}
+else
+{
+while (precOperator(sym) <= precOperator(stackTop()))
+{
+prefix[j++] = pop();
+}
+push(sym);
+}
+}
+while ((x = pop()) != '#')
+{
+prefix[j++] = x;
+}
+prefix[j] = '\0';
+strrev(prefix);
+}
+
+int main() {
+char infix[50];
+printf("Enter the infix expression to convert into prefix: ");
+scanf("%s", infix);
+sp = -1;
+push('#');
+infixToPrefix(infix);
+printf("Prefix expression is: %s\n", prefix);
+return 0;
 }
